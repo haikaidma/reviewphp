@@ -4,17 +4,25 @@ session_start();
 include 'connect.php';
 if(isset($_POST['submit'])){
 	$username = $_POST['username'];
-    $password = $_POST['Password'];
+    $password = md5($_POST['Password']);
+	if(empty($username)){
+		header("location: dangnhap.php?error=Username is required");
+		exit();
+	}
+	else if(empty($password)){
+		header("location: dangnhap.php?error=password is required");
+		exit();
+	}
 	// $password = md5($password);
 	$sql = "SELECT email,password FROM users Where email='$username'";
 	$result = mysqli_query($con, $sql);
 	if (mysqli_num_rows($result) == 0) {
-        echo "This username does not exist. Please check again! <a href='dangnhap.php'>Back Home</a>";
+        header("location: dangnhap.php?error=This username does not exist. Please check again!");
         exit;
     }
 	$row = mysqli_fetch_array($result);
 	if ($password != $row['password']) {
-        echo "Incorrect password. Please re-enter!. <a href='dangnhap.php'>Back Home</a>";
+        header("location: dangnhap.php?error=Incorrect password. Please re-enter!. ");
         exit;
     }
 	$_SESSION['username'] = $username;
@@ -46,6 +54,11 @@ exit();
 				<h2>ADMIN</h2>
 			</div>
 			<form action="dangnhap.php" method="post">
+				<?php
+				if(isset($_GET['error'])){
+				?> <p class="error" style="color:red;"><?php echo $_GET['error'];?></p>	
+				<?php }
+				?>
 				<div class="user-name">
 					<input placeholder="Username" name="username" class="user" type="email" require  >
 				</div>

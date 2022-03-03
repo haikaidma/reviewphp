@@ -58,3 +58,6 @@ button:hover {
    clear: both;
    display: table;
  }
+ .error{
+   color: red;
+ }

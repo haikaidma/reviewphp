@@ -3,13 +3,25 @@ include('connect.php');
 if(isset($_POST['submit'])){
   $name = $_POST['name'];
   $username = $_POST['email'];
-  $password  = md5($_POST['password']);
+  $password  = $_POST['password'];
+  $repassword  = $_POST['repassword'];
+  $uppercase = preg_match('@[A-Z]@', $password);
+  $lowercase = preg_match('@[a-z]@', $password);
+  $number    = preg_match('@[0-9]@', $password);
   if (mysqli_num_rows(mysqli_query($con,"SELECT email FROM users WHERE email='$username'")) > 0)
   {
-      echo "This email already has a user. Please choose another Email <a href='javascript: history.go(-1)'>Trở lại</a>.";
-      exit;
+    header("location: dangki.php?error=This email already has a user. Please choose another Email.");
+    exit;
   }
-  
+  if(!$uppercase || !$lowercase || !$number || strlen($password) < 8) {
+    header("location: dangki.php?error=Password type can fit numbers, strings, uppercase letters, special characters.");
+    exit;
+  }
+  if($password!=$repassword){
+    header("location: dangki.php?error=Passwords do not match .");
+    exit;
+  }
+  $password  = md5($_POST['password']);
   $sql = "INSERT INTO users (name,password,email) VALUES('$name','$password','$username')";
 
   $result = mysqli_query($con, $sql);
@@ -32,7 +44,12 @@ if(isset($_POST['submit'])){
     <form action="dangki.php"  method="post" >
         <div class="container">
           <h1>Form Register</h1>
-          <p>Please enter the form below to register.</p>
+          <hr>
+          <?php
+				if(isset($_GET['error'])){
+				?> <p class="error" style="color:red;"><?php echo $_GET['error'];?></p>	
+				<?php }
+				?>
           <hr>
           <label for="email"><b>Name</b></label>
           <input type="text" placeholder=" Name" name="name" required>
@@ -40,6 +57,8 @@ if(isset($_POST['submit'])){
           <input type="text" placeholder=" Email" name="email" required>
          <label for="psw"><b>Password</b></label>
           <input type="password" placeholder="Password" name="password" required>
+          <label for="psw"><b>Repassword</b></label>
+          <input type="password" placeholder="Repassword"   name="repassword" required>
          <div class="clearfix">
             <button type="submit" class="signupbtn" name="submit">Sign Up</button>
           </div>

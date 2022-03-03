@@ -104,3 +104,6 @@ border: 2px solid #555555;
 .footer p a:hover {
     color: #ea2858;
 }
+.sub-main-w3 .error{
+    color: red;
+}
