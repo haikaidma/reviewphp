@@ -1,0 +1,106 @@
+body {
+	/* background: url(../project/images/bg3.jpg)no-repeat center top;
+	-webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    background-attachment: fixed;
+	background-size: cover;
+	background-position: center; */
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+	height: 100vh;
+    text-align: center;
+	font-family: 'Open Sans', sans-serif;
+}
+.center-container{
+    text-align: center;
+    margin-top: 50px;
+}
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+.bnt-reg-sub{
+    display: inline-flex;
+    padding: 10px;
+}
+.header-top{
+	padding-top: 2px;
+}
+ h1{
+	font-size: 50px;
+    color: white;
+    letter-spacing: 8px;
+    font-weight: 500;
+    font-family: 'Dosis', sans-serif;
+    text-transform: uppercase;
+    text-shadow: 5px 3px 5px #101010;
+}
+h2{
+	font-size: 30px;
+    color: white;
+    letter-spacing: 8px;
+    font-weight: 500;
+    font-family: 'Dosis', sans-serif;
+    text-transform: uppercase;
+    text-shadow: 5px 3px 5px #101010;
+}
+.reg{
+color: white; 
+text-decoration: none;
+}
+.reg:hover{
+    color: #e73c7e;
+}
+[type='password']{
+    padding: 10px 40px;
+    border-style: solid;
+    border-radius: 25px;
+    text-align: center;
+}
+[type='email']{
+    padding: 10px 40px;
+    border-style: solid;
+    border-radius: 25px;
+    text-align: center;
+}
+/* .submit{
+    margin-left: 30px;
+} */
+[type='submit']{
+border-radius: 10px;
+border-style: solid;
+padding: 10px 25px;
+color: rgb(19, 15, 15);
+border: 2px solid #555555;
+}
+/* .btn-1{
+  background-color: #f1f1f1;
+  color: black;
+} */
+[type='submit']:hover{
+    background-color: #3a3535;
+    color: white;
+}
+.footer p {
+    font-size: .9em;
+    color: white;
+    letter-spacing: 2px;
+}
+.footer p a {
+    color: #fff;
+   text-decoration: none;
+}
+.footer p a:hover {
+    color: #ea2858;
+}
