@@ -3,8 +3,7 @@ include('connect.php');
 if(isset($_POST['submit'])){
   $name = $_POST['name'];
   $username = $_POST['email'];
-  $password  = $_POST['password'];
-  // $password = md5($password);
+  $password  = md5($_POST['password']);
   if (mysqli_num_rows(mysqli_query($con,"SELECT email FROM users WHERE email='$username'")) > 0)
   {
       echo "This email already has a user. Please choose another Email <a href='javascript: history.go(-1)'>Trở lại</a>.";
