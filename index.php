@@ -13,7 +13,7 @@
 </html>
 <h2>Ngày 1</h2>
 
-<a href='/reviewphp/ngay1/bai1.php'>bài 1<a>
+<a href="ngay1/bai1.php">bài 1<a>
 <a href='/reviewphp/ngay1/bai2.php'>bài 2<a>
 <a href='/reviewphp/ngay1/bai3.php'>bài 3<a>
 <a href='/reviewphp/ngay1/bai4.php'>bài 4<a>
@@ -38,3 +38,6 @@
 <a href='/revwphiep/ngay2/bai11.php'>bài 11<a>
 <h2>Ngày 3</h2>
 <a href='/reviewphp/ngay3/dangnhap.php'>Form login<a>
+<?php
+
+?>
