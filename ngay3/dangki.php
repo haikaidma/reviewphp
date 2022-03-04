@@ -1,5 +1,10 @@
 <?php
 include('connect.php');
+require "PHPMailer-master/src/PHPMailer.php";  //nhúng thư viện vào để dùng, sửa lại đường dẫn cho đúng nếu bạn lưu vào chỗ khác
+require "PHPMailer-master/src/SMTP.php"; //nhúng thư viện vào để dùng
+require 'PHPMailer-master/src/Exception.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 if(isset($_POST['submit'])){
   $name = $_POST['name'];
   $username = $_POST['email'];
@@ -22,6 +27,33 @@ if(isset($_POST['submit'])){
     exit;
   }
   $password  = md5($_POST['password']);
+  //gmail
+
+//Khởi tạo đối tượng PHPMailer
+$PHPMailer = new PHPMailer(true);
+
+//Khai báo cấu hình và gửi mail
+try {
+    $PHPMailer->SMTPDebug = 0;
+    $PHPMailer->isSMTP();
+    $PHPMailer->Host = 'smtp.example.com';
+    $PHPMailer->SMTPAuth = true;
+    $PHPMailer->Username = 'Haivan141@gmail.com';
+    $PHPMailer->Password = '0338772896';
+    $PHPMailer->SMTPSecure = 'ssl';
+    $PHPMailer->Port = 465;
+   
+    $PHPMailer->setFrom('Haivan141@gmail.com', 'Hải');
+    $PHPMailer->addAddress($username ,$name);
+   
+    $PHPMailer->isHTML(true);
+    $PHPMailer->Subject = 'Here is the subject';
+    $PHPMailer->Body = 'Đăng ký thành công';
+    $PHPMailer->send();
+} catch (Exception $exception) {
+    echo $PHPMailer->ErrorInfo;
+}
+  // ------------------------------------------------------
   $sql = "INSERT INTO users (name,password,email) VALUES('$name','$password','$username')";
 
   $result = mysqli_query($con, $sql);
