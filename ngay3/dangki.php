@@ -44,7 +44,7 @@ try {
     $PHPMailer->SMTPSecure = 'ssl';
     $PHPMailer->Port = 465;
    
-    $PHPMailer->setFrom('Haivan141@gmail.com', 'Haikadima');
+    $PHPMailer->setFrom('nguyenvanhai140320@gmail.com', 'Haikadima');
     $PHPMailer->addAddress($username ,$name);
    
     $PHPMailer->isHTML(true);
@@ -54,29 +54,6 @@ try {
 } catch (Exception $exception) {
     echo $PHPMailer->ErrorInfo;
 }
-// $Correo = new PHPMailer();
-//   $Correo->IsSMTP();
-//   $Correo->SMTPAuth = true;
-//   $Correo->SMTPSecure = "tls";
-//   $Correo->Host = "smtp.gmail.com";
-//   $Correo->Port = 587;
-//   $Correo->UserName = "haivan141@gmail.com";
-//   $Correo->Password = "0338772896";
-//   $Correo->SetFrom('haivan141@gmail.com','Hai');
-//   $Correo->FromName = "From";
-//   $Correo->AddAddress("$username");
-//   $Correo->Subject = "Prueba con PHPMailer";
-//   $Correo->Body = "<H3>Đăng ký thành công</H3>";
-//   $Correo->IsHTML (true);
-//   if (!$Correo->Send())
-//   {
-//     echo "Error: $Correo->ErrorInfo";
-//   }
-//   else
-//   {
-//     echo "Message Sent!";
-//   }
-  // ------------------------------------------------------
   $sql = "INSERT INTO users (name,password,email) VALUES('$name','$password','$username')";
 
   $result = mysqli_query($con, $sql);
