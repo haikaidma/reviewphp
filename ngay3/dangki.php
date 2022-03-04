@@ -5,6 +5,7 @@ require "PHPMailer-master/src/SMTP.php"; //nhúng thư viện vào để dùng
 require 'PHPMailer-master/src/Exception.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+// require_once ("PHPMailer");
 if(isset($_POST['submit'])){
   $name = $_POST['name'];
   $username = $_POST['email'];
@@ -36,14 +37,14 @@ $PHPMailer = new PHPMailer(true);
 try {
     $PHPMailer->SMTPDebug = 0;
     $PHPMailer->isSMTP();
-    $PHPMailer->Host = 'smtp.example.com';
+    $PHPMailer->Host = 'smtp.gmail.com';
     $PHPMailer->SMTPAuth = true;
-    $PHPMailer->Username = 'Haivan141@gmail.com';
-    $PHPMailer->Password = '0338772896';
+    $PHPMailer->Username = 'nguyenvanhai140320@gmail.com';
+    $PHPMailer->Password = '01652652535';
     $PHPMailer->SMTPSecure = 'ssl';
     $PHPMailer->Port = 465;
    
-    $PHPMailer->setFrom('Haivan141@gmail.com', 'Hải');
+    $PHPMailer->setFrom('Haivan141@gmail.com', 'Haikadima');
     $PHPMailer->addAddress($username ,$name);
    
     $PHPMailer->isHTML(true);
@@ -53,6 +54,28 @@ try {
 } catch (Exception $exception) {
     echo $PHPMailer->ErrorInfo;
 }
+// $Correo = new PHPMailer();
+//   $Correo->IsSMTP();
+//   $Correo->SMTPAuth = true;
+//   $Correo->SMTPSecure = "tls";
+//   $Correo->Host = "smtp.gmail.com";
+//   $Correo->Port = 587;
+//   $Correo->UserName = "haivan141@gmail.com";
+//   $Correo->Password = "0338772896";
+//   $Correo->SetFrom('haivan141@gmail.com','Hai');
+//   $Correo->FromName = "From";
+//   $Correo->AddAddress("$username");
+//   $Correo->Subject = "Prueba con PHPMailer";
+//   $Correo->Body = "<H3>Đăng ký thành công</H3>";
+//   $Correo->IsHTML (true);
+//   if (!$Correo->Send())
+//   {
+//     echo "Error: $Correo->ErrorInfo";
+//   }
+//   else
+//   {
+//     echo "Message Sent!";
+//   }
   // ------------------------------------------------------
   $sql = "INSERT INTO users (name,password,email) VALUES('$name','$password','$username')";
 
