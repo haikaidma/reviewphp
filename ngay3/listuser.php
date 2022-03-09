@@ -6,11 +6,14 @@ $result = mysqli_query($con,"SELECT * FROM users");
 <html>
 <head>
 </head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 <style>
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
+  text-align: center;
 }
 
 td, th {
@@ -22,14 +25,117 @@ td, th {
 tr:nth-child(even) {
   background-color: #dddddd;
 }
+h4{
+	text-align: center;
+}
+.search{
+	text-align: center;
+}
 </style>
 <body>
 	<h4>LIST USER</h4>
-<table>
+<div class="search" >
+<form action="listuser.php" method="get">
+                Search: <input type="text" name="search" />
+                <input type="submit" name="submit" value="search" />
+            </form>
+			<?php
+        include 'connect.php';
+        if (isset($_REQUEST['submit'])) 
+        {
+            // Gán hàm addslashes để chống sql injection
+            $search = addslashes($_GET['search']);
+ 
+            // Nếu $search rỗng thì báo lỗi, tức là người dùng chưa nhập liệu mà đã nhấn submit.
+            if (empty($search)) {
+                echo "Please enter text";
+            } 
+            else
+            {
+                // Dùng câu lênh like trong sql và sứ dụng toán tử % của php để tìm kiếm dữ liệu chính xác hơn.
+                $query = "select * from users where name like '%$search%' Or email like '%$search%'";
+ 
+ 
+                // Thực thi câu truy vấn
+                $sql = mysqli_query($con,$query);
+ 
+                // Đếm số đong trả về trong sql.
+                $num = mysqli_num_rows($sql);
+ 
+                // Nếu có kết quả thì hiển thị, ngược lại thì thông báo không tìm thấy kết quả
+                if ($num > 0 && $search != "") 
+                {
+                    // Dùng $num để đếm số dòng trả về.
+                    echo "$num results returned with the keyword <b>$search</b>";
+ 
+                    // Vòng lặp while & mysql_fetch_assoc dùng để lấy toàn bộ dữ liệu có trong table và trả về dữ liệu ở dạng array.
+                    echo '<table border="1" cellspacing="0" cellpadding="10">';
+                    while ($row = mysqli_fetch_assoc($sql)) {
+                        echo '<tr>';
+                            echo "<td>{$row['name']}</td>";
+                            echo "<td>{$row['password']}</td>";
+                            echo "<td>{$row['email']}</td>";
+                         
+                        echo '</tr>';
+                    }
+                    echo '</table>';
+                } 
+                else {
+                    echo "Can't find results";
+                }
+            }
+        }
+        ?>   
+</div>
+<br>
+
+<br>
+<?php
+				if(isset($_GET['alert'])){
+				?> <p class="alert" style="color:green;"><?php echo $_GET['alert'];?></p>	
+				<?php }
+				?>
+<?php 
+        // PHẦN XỬ LÝ PHP
+        // BƯỚC 1: KẾT NỐI CSDL
+        include 'connect.php';
+
+        // BƯỚC 2: TÌM TỔNG SỐ RECORDS
+        $result = mysqli_query($con, 'select count(id) as total from users');
+        $row = mysqli_fetch_assoc($result);
+        $total_records = $row['total'];
+
+        // BƯỚC 3: TÌM LIMIT VÀ CURRENT_PAGE
+        $current_page = isset($_GET['page']) ? $_GET['page'] : 1;
+        $limit = 4;
+
+        // BƯỚC 4: TÍNH TOÁN TOTAL_PAGE VÀ START
+        // tổng số trang
+        $total_page = ceil($total_records / $limit);
+
+        // Giới hạn current_page trong khoảng 1 đến total_page
+        if ($current_page > $total_page){
+            $current_page = $total_page;
+        }
+        else if ($current_page < 1){
+            $current_page = 1;
+        }
+
+        // Tìm Start
+        $start = ($current_page - 1) * $limit;
+
+        // BƯỚC 5: TRUY VẤN LẤY DANH SÁCH TIN TỨC
+        // Có limit và start rồi thì truy vấn CSDL lấy danh sách tin tức
+        $result = mysqli_query($con, "SELECT * FROM users LIMIT $start, $limit");
+		// PHẦN HIỂN THỊ TIN TỨC
+// BƯỚC 6: HIỂN THỊ DANH SÁCH TIN TỨC
+		?>
+	<table>
 	<tr>
 		<td>Name</td>
 		<td>Email</td>
 		<td>Password</td>
+		<td>Action</td>
 	</tr>
 	<?php
 	$i=0;
@@ -39,12 +145,44 @@ tr:nth-child(even) {
 		<td><?php echo $row["name"]; ?></td>
 		<td><?php echo $row["email"]; ?></td>
 		<td><?php echo $row["password"]; ?></td>
+		<td><a href="delete.php?ID=<?php echo $row["ID"]; ?>" class= "btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+		<a href=" update.php?ID=<?php echo $row["ID"]; ?> " class="btn btn-success">Update</a>
+	</td>
 	</tr>
 	<?php
 	$i++;
 	}
 	?>
 </table>
-<a href='dangnhap.php'>back</a>
+ <div class="pagination">
+           <?php 
+            // PHẦN HIỂN THỊ PHÂN TRANG
+            // BƯỚC 7: HIỂN THỊ PHÂN TRANG
+
+            // nếu current_page > 1 và total_page > 1 mới hiển thị nút prev
+            if ($current_page > 1 && $total_page > 1){
+                echo '<a href="listuser.php?page='.($current_page-1).'">Prev</a> | ';
+            }
+
+            // Lặp khoảng giữa
+            for ($i = 1; $i <= $total_page; $i++){
+                // Nếu là trang hiện tại thì hiển thị thẻ span
+                // ngược lại hiển thị thẻ a
+                if ($i == $current_page){
+                    echo '<span>'.$i.'</span> | ';
+                }
+                else{
+                    echo '<a href="listuser.php?page='.$i.'">'.$i.'</a> | ';
+                }
+            }
+
+            // nếu current_page < $total_page và total_page > 1 mới hiển thị nút prev
+            if ($current_page < $total_page && $total_page > 1){
+                echo '<a href="listuser.php?page='.($current_page+1).'">Next</a> | ';
+            }
+           ?>
+        </div>
+		<br>
+<a href='dangnhap.php' class="btn btn-secondary">Exit</a>
 </body>
 </html>	

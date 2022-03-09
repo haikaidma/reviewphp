@@ -14,6 +14,11 @@ if(isset($_POST['submit'])){
   $uppercase = preg_match('@[A-Z]@', $password);
   $lowercase = preg_match('@[a-z]@', $password);
   $number    = preg_match('@[0-9]@', $password);
+  // if (preg_match ("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+\.[A-Za-z]{2,6}$/", $username)) 
+  //   {
+  //     header("location: dangki.php?error=Invalid address: (to): $username .");
+  //     exit;
+  //   }
   if (mysqli_num_rows(mysqli_query($con,"SELECT email FROM users WHERE email='$username'")) > 0)
   {
     header("location: dangki.php?error=This email already has a user. Please choose another Email.");
@@ -65,7 +70,7 @@ try {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en">  
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -96,5 +101,6 @@ try {
           </div>
         </div>
       </form>
+      
 </body>
 </html>
