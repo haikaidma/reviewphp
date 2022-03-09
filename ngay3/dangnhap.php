@@ -5,15 +5,6 @@ include 'connect.php';
 if(isset($_POST['submit'])){
 	$username = $_POST['username'];
     $password = md5($_POST['Password']);
-	if(empty($username)){
-		header("location: dangnhap.php?error=Username is required");
-		exit();
-	}
-	else if(empty($password)){
-		header("location: dangnhap.php?error=password is required");
-		exit();
-	}
-	// $password = md5($password);
 	$sql = "SELECT email,password FROM users Where email='$username'";
 	$result = mysqli_query($con, $sql);
 	if (mysqli_num_rows($result) == 0) {
@@ -38,6 +29,10 @@ exit();
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="style.css">
+	<script src="http://code.jquery.com/jquery-3.4.1.min.js" 
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.js"></script>
 	<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
 </head>
 <body>
@@ -53,18 +48,18 @@ exit();
 			<div class="wthree-pro">
 				<h2>ADMIN</h2>
 			</div>
-			<form action="dangnhap.php" method="post">
+			<form action="dangnhap.php" method="post" id= "myForm" >
 				<?php
 				if(isset($_GET['error'])){
 				?> <p class="error" style="color:red;"><?php echo $_GET['error'];?></p>	
 				<?php }
 				?>
 				<div class="user-name">
-					<input placeholder="Username" name="username" class="user" type="email" require  >
+					<input placeholder="Username" name="username" class="user" type="email"   >
 				</div>
 				<br>
 				<div class="pass-word">
-					<input  placeholder="Password" name="Password" class="pass" type="password" require >
+					<input  placeholder="Password" name="Password" class="pass" type="password"  >
 				</div>
 				<br>
 					<a class="reg" href="dangki.php" >Do not have an account?</a>
@@ -77,6 +72,7 @@ exit();
 			</form>
 		</div>
 	</div>
+	
 	<!--//main-->
 	<!--footer-->
 	<div class="footer">
@@ -86,3 +82,34 @@ exit();
 </div>
 </body>
 </html>
+<script type="text/javascript">
+$(document).ready(function () {
+
+//Khi bàn phím được nhấn và thả ra thì sẽ chạy phương thức này
+$("#myForm").validate({
+  rules: {
+    username: "required",
+    email: {
+      required: true,
+      email: true
+    },
+    Password: {
+      required: true,
+      minlength: 6,
+      maxlength: 15
+    },
+  },
+  messages: {
+    username: {
+      required: "Vui lòng nhập vào email",
+      email: "Nhập đúng định dạng email đê :D"
+    },
+    Password: {
+      required: "Vui lòng nhập mật khẩu!",
+      minlength: "Độ dài tối thiểu 6 kí tự",
+      maxlength: "Độ tài tối đa 15 kí tự"
+    },
+  }
+});
+});
+</script>

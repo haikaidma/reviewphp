@@ -1,4 +1,21 @@
-<?php
+
+<!DOCTYPE html>
+<html lang="en">  
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style2.css">
+    <script src="http://code.jquery.com/jquery-3.4.1.min.js" 
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.js"></script>
+
+</head>
+
+<body>
+    <form action="dangki.php"  method="post" id="formDemo">
+    <?php
 include('connect.php');
 require "PHPMailer-master/src/PHPMailer.php";  //nhúng thư viện vào để dùng, sửa lại đường dẫn cho đúng nếu bạn lưu vào chỗ khác
 require "PHPMailer-master/src/SMTP.php"; //nhúng thư viện vào để dùng
@@ -11,12 +28,12 @@ if(isset($_POST['submit'])){
   $username = $_POST['email'];
   $password  = $_POST['password'];
   $repassword  = $_POST['repassword'];
-  $partten = "/^[A-Za-z0-9_.]{6,32}@([a-zA-Z0-9]{2,12})(.[a-zA-Z]{2,12})+$/";
-  if (!preg_match ($partten, $username)) 
-    {
-      header("location: dangki.php?error=Invalid address: (to): $username .");
-      exit;
-    }
+  // $partten = "/^[A-Za-z0-9_.]{6,32}@([a-zA-Z0-9]{2,12})(.[a-zA-Z]{2,12})+$/";
+  // if (!preg_match ($partten, $username)) 
+  //   {
+  //     header("location: dangki.php?error=Invalid address: (to): $username .");
+  //     exit;
+  //   }
   $uppercase = preg_match('@[A-Z]@', $password);
   $lowercase = preg_match('@[a-z]@', $password);
   $number    = preg_match('@[0-9]@', $password);
@@ -71,16 +88,6 @@ try {
   
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">  
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style2.css">
-</head>
-<body>
-    <form action="dangki.php"  method="post" >
         <div class="container">
           <h1>Form Register</h1>
           <hr>
@@ -91,13 +98,13 @@ try {
 				?>
           <hr>
           <label for="email"><b>Name</b></label>
-          <input type="text" placeholder=" Name" name="name" required>
-         <label for="email"><b>Email</b></label>
-          <input type="text" placeholder=" Email" name="email" required>
+          <input type="text" placeholder=" Name" name="name"  >
+         <label for="email"><b>Email</b></label>  
+          <input type="text" placeholder=" Email" name="email" >
          <label for="psw"><b>Password</b></label>
-          <input type="password" placeholder="Password" name="password" required>
+          <input type="password" placeholder="Password" name="password"  >
           <label for="psw"><b>Repassword</b></label>
-          <input type="password" placeholder="Repassword"   name="repassword" required>
+          <input type="password" placeholder="Repassword"   name="repassword"  >
          <div class="clearfix">
             <button type="submit" class="signupbtn" name="submit">Sign Up</button>
           </div>
@@ -106,3 +113,40 @@ try {
       
 </body>
 </html>
+<script type="text/javascript">
+$(document).ready(function () {
+
+//Khi bàn phím được nhấn và thả ra thì sẽ chạy phương thức này
+$("#formDemo").validate({
+  rules: {
+    name: "required",
+    email: {
+      required: true,
+      email: true
+    },
+    password: {
+      required: true,
+      minlength: 6,
+      maxlength: 15
+    },
+    repassword:"required"
+  },
+  messages: {
+    name: "Vui lòng nhập tên!<br>",
+    email: {
+      required: "Vui lòng nhập vào email<br>",
+      email: "Nhập đúng định dạng email đê :D<br>"
+    },
+    password: {
+      required: "Vui lòng nhập mật khẩu!<br>",
+      minlength: "Độ dài tối thiểu 6 kí tự<br>",
+      maxlength: "Độ tài tối đa 15 kí tự<br>"
+    },
+    repassword: {
+							required: 'Vui lòng nhập mật khẩu<br>',
+							equalTo: 'Mật khẩu không trùng<br>'
+						},
+  }
+});
+});
+</script>
