@@ -127,7 +127,11 @@ $("#formDemo").validate({
       minlength: 6,
       maxlength: 15
     },
-    repassword:"required"
+    repassword: {
+        equalTo: "#password",
+        minlength: 6,
+      maxlength: 15
+    },
   },
   messages: {
     name: "Vui lòng nhập tên!<br>",

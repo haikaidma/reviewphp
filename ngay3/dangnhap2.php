@@ -3,14 +3,46 @@
 session_start();
 include 'connect.php';
 //remember me
-if(isset($_SESSION['username']))
-{
- header("location:listuser.php");
+if(empty($_SESSION['username'])){
+ 
+    if(isset($cookie_name)){
+
+        if(isset($_COOKIE[$cookie_name])){
+
+            parse_str($_COOKIE[$cookie_name]);
+
+            $sql2="select * from users where name='$username' and password='$hash'";
+
+            $result2=mysqli_query($sql2,$con);
+
+            if($result2){
+
+                header('location:listuser.php');
+
+                exit;
+
+            }
+
+        }
+
+    }
+
 }
+
+else{
+
+    header('location:infomation.php');//chuyển qua trang đăng nhập thành công
+
+    exit;
+
+}   
+
+
 //--------
 if(isset($_POST['submit'])){
 	$username = $_POST['username'];
     $password = md5($_POST['Password']);
+    $a_check=((isset($_POST['remember'])!=0)?1:"");
 	$sql = "SELECT email,password FROM users Where email='$username'";
 	$result = mysqli_query($con, $sql);
 	if (mysqli_num_rows($result) == 0) {
@@ -22,25 +54,22 @@ if(isset($_POST['submit'])){
         header("location: dangnhap.php?error=Incorrect password. Please re-enter!. ");
         exit;
     }
-	if($row)   
-	{  
-	 if(!empty($_POST["remember"]))   
-	 {  
-	  setcookie ("username",$username,time()+ (10 * 365 * 24 * 60 * 60));  
-	  setcookie ("password",$password,time()+ (10 * 365 * 24 * 60 * 60));
-	  $_SESSION["username"] = $username;
-	 }  
-	 else  
-	 {  
-	  if(isset($_COOKIE["username"]))   
-	  {  
-	   setcookie ("username","");  
-	  }  
-	  if(isset($_COOKIE["password"]))   
-	  {  
-	   setcookie ("password","");  
-	  }  
-	}
+    $f_user=$row['username'];
+ 
+    $f_pass=$row['password'];
+
+    if($f_user==$username && $f_pass==$password){
+
+        $_SESSION['username']=$f_user;
+
+        $_SESSION['password']=$f_pass;
+
+        if($a_check==1){
+
+            setcookie ($cookie_name, 'username='.$f_user.'&hash='.$f_pass, time() + $cookie_time);
+
+        }
+
 }
 	header("Location: listuser.php"); 
 	exit();
@@ -71,23 +100,23 @@ if(isset($_POST['submit'])){
 			<div class="wthree-pro">
 				<h2>ADMIN</h2>
 			</div>
-			<form action="dangnhap.php" method="post" id= "myForm" >
+			<form action="dangnhap2.php" method="post" id= "myForm" >
 				<?php
 				if(isset($_GET['error'])){
 				?> <p class="error" style="color:red;"><?php echo $_GET['error'];?></p>	
 				<?php }
 				?>
 				<div class="user-name">
-					<input placeholder="Username" name="username" class="user" type="email" value="<?php if(isset($_COOKIE["username"])) { echo $_COOKIE["username"]; } ?>"  >
+					<input placeholder="Username" name="username" class="user" type="email" value="">
 				</div>
 				<br>
 				<div class="pass-word">
-					<input  placeholder="Password" name="Password" class="pass" type="password"  value="<?php if(isset($_COOKIE["password"])) { echo $_COOKIE["password"]; } ?>" >
+					<input  placeholder="Password" name="Password" class="pass" type="password"  value="" >
 				</div>
 				<br>
 				<div class="remember-me">
 					<label for="remember-me" style="color:white;">Remember me</label>
-					<input name="remember"  type="checkbox" <?php if(isset($_COOKIE["username"])) { ?> checked <?php } ?>>
+					<input name="remember"  type="checkbox" value="1">
 				</div>
 				<br>
 					<a class="reg" href="dangki.php" >Do not have an account?</a>

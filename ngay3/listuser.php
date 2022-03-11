@@ -183,6 +183,6 @@ h4{
            ?>
         </div>
 		<br>
-<a href='dangnhap.php' class="btn btn-secondary">Exit</a>
+<a href='logout.php' class="btn btn-secondary">logout</a>
 </body>
 </html>	
