@@ -2,7 +2,7 @@
 if(isset($_POST['submit'])==TRUE)
 {
 $email = base64_decode($_GET['email']);
-$key = $_GET['key'];
+$key = $_GET['token'];
 
     $sql = "SELECT * FROM resetpass Where m_email='$email'";
 	$result = mysqli_query($con, $sql);
@@ -15,7 +15,11 @@ $key = $_GET['key'];
         $row = mysqli_fetch_array($result);
         if(md5($key)==$row['m_token'])
         {
-            echo"reuw";  
+            $query = "UPDATE users SET  password='" . md5($_POST['passwordchange']) . "' WHERE password='" . $key . "'";
+	    $result2 = mysqli_query($con,$query);
+		echo "Đổi thành công.";
+	
+	
         }
     }
 }
@@ -40,9 +44,9 @@ $key = $_GET['key'];
     <h4 style="text-align: center;">Đổi mật khẩu</h4>
     <div class="form-group">
     <label for="password">Nhập Mật khẩu</label>
-    <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
+    <input type="password" class="form-control" id="password" name="passwordchange" placeholder="Enter password">
     <label for="repassword">Nhập lại Mật khẩu</label>
-    <input type="password" class="form-control" id="repassword" name="repassword" placeholder="Enter Repassword">
+    <input type="password" class="form-control" id="repassword" name="repasswordchange" placeholder="Enter Repassword">
   </div>
     <button type="submit" name="submit" class="btn btn-primary">Gửi yêu cầu</button>
     </form>
