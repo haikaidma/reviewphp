@@ -15,7 +15,7 @@ $key = $_GET['key'];
         $row = mysqli_fetch_array($result);
         if(md5($key)==$row['m_token'])
         {
-            echo"reuw";
+            echo"reuw";  
         }
     }
 }
@@ -36,7 +36,7 @@ $key = $_GET['key'];
         }
 </style>
 <body>
-<form action="" method="post" style="width:600px;" class="border border-primary border-2 m-auto p-2" id="formreset">
+<form action="doimk.php" method="post" style="width:600px;" class="border border-primary border-2 m-auto p-2" id="formreset">
     <h4 style="text-align: center;">Đổi mật khẩu</h4>
     <div class="form-group">
     <label for="password">Nhập Mật khẩu</label>
