@@ -1,4 +1,25 @@
+<?php
+if(isset($_POST['submit'])==TRUE)
+{
+$email = base64_decode($_GET['email']);
+$key = $_GET['key'];
 
+    $sql = "SELECT * FROM resetpass Where m_email='$email'";
+	$result = mysqli_query($con, $sql);
+	if (mysqli_num_rows($result) == 0) {
+        header("location: resetpass.php?error=Lỗi.");
+        exit;  
+    }
+    else
+    {
+        $row = mysqli_fetch_array($result);
+        if(md5($key)==$row['m_token'])
+        {
+            echo"reuw";
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
