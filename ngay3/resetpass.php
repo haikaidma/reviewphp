@@ -18,8 +18,8 @@ if(isset($_POST['submit'])==TRUE)
     {
          $mkmoi=substr(md5(rand(0,999999)),0,8);
          $time=time();
-        $sql2="INSERT INTO resetpass (m_email, m_time, m_numbercheck,m_token)
-        VALUES ('$email',  $time,0, '$mkmoi');";
+        $sql2="INSERT INTO resetpass (m_email, m_time,m_token)
+        VALUES ('$email',  $time, '$mkmoi');";
         $kq= mysqli_query($con, $sql2);
 
         if($kq==true)
@@ -42,7 +42,7 @@ if(isset($_POST['submit'])==TRUE)
     
         $PHPMailer->isHTML(true);
         $PHPMailer->Subject = 'Reset Password';
-        $PHPMailer->Body = "Nhấn vào để đổi mk. https://nineplus-intern.herokuapp.com/ngay3/doimk.php?token={$mkmoi}";
+        $PHPMailer->Body = "Nhấn vào để đổi mk. https://nineplus-intern.herokuapp.com/ngay3/doimk.php?token={$mkmoi}&email={$email}";
         $PHPMailer->send();
     } catch (Exception $exception) {
         echo $PHPMailer->ErrorInfo;
@@ -51,7 +51,6 @@ if(isset($_POST['submit'])==TRUE)
 
 }
 ?>
-<a href="https://nineplus-intern.herokuapp.com/ngay3/doimk.php?email={email}&key={key}">Nhấn vào đây để tiến hành đặt lại mật khẩu </a>
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -1,27 +1,29 @@
 <?php
-if(isset($_POST['submit'])==TRUE)
+include 'connect.php';
+if(isset($_GET['token'])&&isset($_GET['token']))
 {
-$email = base64_decode($_GET['email']);
-$key = $_GET['token'];
-
+  $key = $_GET['token'];
+  $email=$_GET['email'];
     $sql = "SELECT * FROM resetpass Where m_email='$email'";
 	$result = mysqli_query($con, $sql);
 	if (mysqli_num_rows($result) == 0) {
-        header("location: resetpass.php?error=Lỗi.");
+        header("location: doimk.php?error=Lỗi.");
         exit;  
     }
-    else
-    {
-        $row = mysqli_fetch_array($result);
-        if(md5($key)==$row['m_token'])
-        {
-            $query = "UPDATE users SET  password='" . md5($_POST['passwordchange']) . "' WHERE password='" . $key . "'";
-	    $result2 = mysqli_query($con,$query);
-		echo "Đổi thành công.";
-	
-	
-        }
+  else{
+    if(isset($_POST['submit'])){
+      $email=$_POST['email'];
+      var_dump($email);
+      exit;
+        $newpass = md5($_POST["passwordchange"]);
+        $renewpass = md5($_POST["repasswordchange"]); 
+      if($newpass==$renewpass){   
+        $query = "UPDATE users SET  password='" . $newpass . "' WHERE email='" . $email . "'";
+    $result2 = mysqli_query($con,$query);
+    echo "Đổi thành công.";
     }
+    }
+  }
 }
 ?>
 <!DOCTYPE html>
