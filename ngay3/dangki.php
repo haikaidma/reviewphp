@@ -17,7 +17,7 @@ if(isset($_POST['submit'])){
   //     header("location: dangki.php?error=Invalid address: (to): $username .");
   //     exit;
   //   }
-  $number = preg_match('@[0-9]@', $password);
+$number = preg_match('@[0-9]@', $password);
 $uppercase = preg_match('@[A-Z]@', $password);
 $lowercase = preg_match('@[a-z]@', $password);
 $specialChars = preg_match('@[^\w]@', $password);

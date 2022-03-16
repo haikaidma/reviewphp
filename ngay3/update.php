@@ -2,7 +2,7 @@
 include_once 'connect.php';
 if(count($_POST)>0) {
 	
-	$query = "UPDATE users SET ID='" . $_POST['ID'] . "', name='" . $_POST['name'] . "', password='" . md5($_POST['password']) . "',email='" . $_POST['email'] . "' WHERE ID='" . $_POST['ID'] . "'";
+	$query = "UPDATE users SET name='" . htmlspecialchars($_POST['name']) . "' WHERE ID='" . $_GET['ID'] . "'";
 	if($result = mysqli_query($con,$query)){
 		echo "Record Updated Successfully.";
 	}
@@ -11,8 +11,12 @@ if(count($_POST)>0) {
 	}
 	
 }
-$result = mysqli_query($con,"SELECT * FROM users WHERE ID='" . $_GET['ID'] . "'");
-$row= mysqli_fetch_assoc($result);
+$id = isset($_GET['ID']) ? $_GET['ID'] : false;
+$id = str_replace('/[^0-9]/', '', $id);
+$result = mysqli_query($con,"SELECT * FROM users WHERE id = '".htmlspecialchars($id)	."' limit 1");
+if ($result) {
+	$row= mysqli_fetch_assoc($result);
+}
 ?>
 <html>
 <head>
@@ -38,23 +42,14 @@ $row= mysqli_fetch_assoc($result);
 <div style="padding-bottom:5px;">
 <a href="listuser.php">USERS LIST</a>
 </div>
-	ID: <br>
-	<input type="hidden" name="ID" class="txtField" value="<?php echo $row['ID']; ?>">
-	<input type="text" name="ID"  value="<?php echo $row['ID']; ?>">
-	<br>
+	
 	 Name: <br>
 	<input type="text" name="name"  value="<?php echo $row['name']; ?>">
 	<br>
 	Email :<br>
 	<input type="email" name="email" readonly  value="<?php echo $row['email']; ?>">
-	<br>
-	Password:<br>
-	<input type="password" name="password"   value="<?php echo $row['password']; ?>">
-	<br>
-	Repassword:<br>	
-	<input type="password" name="repassword"   value="<?php echo $row['password']; ?>">
-	<br>
     <br>
+	<br>
 	<input type="submit" name="submit" class="btn btn-primary" value="Submit" class="buttom">
 </form>
 </body>

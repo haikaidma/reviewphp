@@ -7,7 +7,9 @@ $result = mysqli_query($con,"SELECT * FROM users");
 <head>
 </head>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <style>
 table {
   font-family: arial, sans-serif;
@@ -196,17 +198,19 @@ h4{
             
         if(confirm('Bạn chắc chắn muốn xoá')){
             var $ele = $(this).parent().parent();
+            var deleteid = $(this).data('ID');
+            console.log(deleteid);
+            die();
                 $.ajax({
                 url: "delete.php",
-                type: "POST",
+                type: 'POST',
                 cache: false,
                 data:{
-                    id: $(this).attr("data-id")
+                    id: deleteid
                 },
                 success: function(dataResult){
                     var dataResult = JSON.parse(dataResult);
                     if(dataResult.statusCode==200){
-                        echo("xoá thành công");
                         $ele.fadeOut().remove();
                     }
                 }

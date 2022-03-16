@@ -1,10 +1,9 @@
 <?php 
 include_once 'connect.php';
-$id=$_GET['ID'];
+$id=$_POST['id'];
 $sql = "DELETE FROM users WHERE ID=$id";
 if (mysqli_query($con, $sql)) {
 
-    echo "Data Deleted Successfully.";
   header("location: listuser.php?alert=Data Deleted Successfully");
 } 
 else {
