@@ -26,6 +26,8 @@ $row= mysqli_fetch_assoc($result);
     }
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="js/jquery.validate.min.js"></script>
 <body>
 <form name="frmUser"class="form" method="post" action="">
 <div><?php if(isset($message)) { echo $message; } ?>
@@ -33,6 +35,7 @@ $row= mysqli_fetch_assoc($result);
 <div style="padding-bottom:5px;">
 <a href="listuser.php">USERS LIST</a>
 </div>
+<form action="" method="post" id= "formupdate" >
 	ID: <br>
 	<input type="hidden" name="ID" class="txtField" value="<?php echo $row['ID']; ?>">
 	<input type="text" name="ID"  value="<?php echo $row['ID']; ?>">
@@ -46,7 +49,7 @@ $row= mysqli_fetch_assoc($result);
 	Password:<br>
 	<input type="password" name="password"   value="<?php echo $row['password']; ?>">
 	<br>
-	Repassword:<br>
+	Repassword:<br>	
 	<input type="password" name="repassword"   value="<?php echo $row['password']; ?>">
 	<br>
     <br>
@@ -55,3 +58,40 @@ $row= mysqli_fetch_assoc($result);
 </form>
 </body>
 </html>
+<script type="text/javascript">
+$(document).ready(function () {
+
+//Khi bàn phím được nhấn và thả ra thì sẽ chạy phương thức này
+$("#formupdate").validate({
+  rules: {
+    name: {
+      required: true,
+    },
+	password: {
+      required: true,
+      minlength: 6,
+      maxlength: 15
+    },
+    repassword: {
+        equalTo: "#password",
+        minlength: 6,
+      maxlength: 15
+    },
+  },
+  messages: {
+    name: {
+      required: "Vui lòng nhập vào name",
+    },
+	password: {	
+      required: "Vui lòng nhập mật khẩu!",
+      minlength: "Độ dài tối thiểu 6 kí tự ",
+      maxlength: "Độ tài tối đa 15 kí tự "
+    },
+    repassword: {
+	required: 'Vui lòng nhập mật khẩu<br>',
+	equalTo: 'Mật khẩu không trùng<br>'
+	},
+  }
+});
+});
+</script>

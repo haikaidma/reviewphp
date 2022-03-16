@@ -42,7 +42,7 @@ if(isset($_POST['submit'])==TRUE)
     
         $PHPMailer->isHTML(true);
         $PHPMailer->Subject = 'Reset Password';
-        $PHPMailer->Body = "Nhấn vào để đổi mk. http://localhost:8080/reviewPhp/ngay3/doimk.php?token={$token}";
+        $PHPMailer->Body = "Nhấn vào để đổi mk. https://reviewphp.herokuapp.com/ngay3/doimk.php?token={$token}";
         $PHPMailer->send();
     } catch (Exception $exception) {
         echo $PHPMailer->ErrorInfo;

@@ -193,7 +193,7 @@ h4{
 $(document).ready(function() {
    
 	$(document).on("click", "#delete", function() { 
-   
+        
     if(confirm('Bạn chắc chắn muốn xoá')){
 		var $ele = $(this).parent().parent();
             $.ajax({

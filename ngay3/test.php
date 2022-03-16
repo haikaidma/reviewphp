@@ -39,12 +39,11 @@
                 $password = $_POST['password'];
                 $sql = "SELECT email,password FROM users Where email='$username'";
                 $result = mysqli_query($con, $sql);
-var_dump($sql);
-exit;
                 // if (mysqli_num_rows($result) == 0) {
                 //     header("location: dangnhap.php?error=This username does not exist. Please check again!");
                 //     exit;
                 // }    
+                
                             if(mysqli_num_rows($result) > 0){
                                 while($row = mysqli_fetch_array($result)){
                                     if(password_verify($password, $row['password'])){
