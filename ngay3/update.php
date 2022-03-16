@@ -24,18 +24,20 @@ $row= mysqli_fetch_assoc($result);
         text-align: center;
         margin:0 auto;
     }
+	.error{
+		color:red;
+	}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="js/jquery.validate.min.js"></script>
 <body>
-<form name="frmUser"class="form" method="post" action="">
+<form name="frmUser"class="form" method="post" action="" id= "formupdate">
 <div><?php if(isset($message)) { echo $message; } ?>
 </div>
 <div style="padding-bottom:5px;">
 <a href="listuser.php">USERS LIST</a>
 </div>
-<form action="" method="post" id= "formupdate" >
 	ID: <br>
 	<input type="hidden" name="ID" class="txtField" value="<?php echo $row['ID']; ?>">
 	<input type="text" name="ID"  value="<?php echo $row['ID']; ?>">
@@ -58,21 +60,19 @@ $row= mysqli_fetch_assoc($result);
 </body>
 </html>
 <script type="text/javascript">
-$().ready(function() {
-	$("#demoForm").validate({
-		onfocusout: false,
-		onkeyup: false,
-		onclick: false,
-		rules: {
-			"name": {
-				required: true,
-			}
-		},
-		messages: {
-			"name": {
-				required: "Bắt buộc nhập username",
-			}
-		}
-	});
+$(document).ready(function () {
+//Khi bàn phím được nhấn và thả ra thì sẽ chạy phương thức này
+$("#formupdate").validate({
+  rules: {
+    name: {
+      required: true,
+    },
+  },
+  messages: {
+    name: {
+      required: "Vui lòng nhập vào name",
+    },
+  }
+});
 });
 </script>

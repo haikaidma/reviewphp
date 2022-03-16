@@ -7,19 +7,25 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 // require_once ("PHPMailer");
 if(isset($_POST['submit'])){
-  $name = $_POST['name'];
-  $username = $_POST['email'];
-  $password  = $_POST['password'];
-  $repassword  = $_POST['repassword'];
+  $name = htmlspecialchars($_POST['name']);
+  $username = htmlspecialchars($_POST['email']);
+  $password  = htmlspecialchars($_POST['password']);
+  $repassword  = htmlspecialchars($_POST['repassword']);
   // $partten = "/^[A-Za-z0-9_.]{6,32}@([a-zA-Z0-9]{2,12})(.[a-zA-Z]{2,12})+$/";
   // if (!preg_match ($partten, $username)) 
   //   {
   //     header("location: dangki.php?error=Invalid address: (to): $username .");
   //     exit;
   //   }
-  $uppercase = preg_match('@[A-Z]@', $password);
-  $lowercase = preg_match('@[a-z]@', $password);
-  $number    = preg_match('@[0-9]@', $password);
+  $number = preg_match('@[0-9]@', $password);
+$uppercase = preg_match('@[A-Z]@', $password);
+$lowercase = preg_match('@[a-z]@', $password);
+$specialChars = preg_match('@[^\w]@', $password);
+ 
+if(strlen($password) < 8 || !$number || !$uppercase || !$lowercase || !$specialChars) {
+  header("location: dangki.php?error=Password type can fit numbers, strings, uppercase letters, special characters.");
+  exit;
+}
 
   if (mysqli_num_rows(mysqli_query($con,"SELECT email FROM users WHERE email='$username'")) > 0)
   {
@@ -40,9 +46,9 @@ if(isset($_POST['submit'])){
 
   $result = mysqli_query($con, $sql);
   if($result)
-    echo  "Register success.<a href='dangnhap.php'>Back Home</a>";
+  header("location: dangki.php?success=Register success");
   else
-  echo"Register fail  <a href='dangki.php'>Try again</a>";
+  header("location: dangki.php?error=Register Fail");
   
 
 //Khởi tạo đối tượng PHPMailer
@@ -90,10 +96,14 @@ try {
           <hr>
           <?php
 				if(isset($_GET['error'])){
-				?> <p class="error" style="color:red;"><?php echo $_GET['error'];?></p>	
+				?> <p class="error" style="color:red;background:red;"><?php echo $_GET['error'];?></p>	
 				<?php }
 				?>
-        <span id="password_error"></span>
+        <?php
+        		if(isset($_GET['success'])){
+				?> <p class="error" style="color:black;background:#2a8536;width:600px;"><?php echo $_GET['success'];?></p>	
+				<?php }
+				?>
           <hr>
           <label for="email"><b>Name</b></label>
           <input type="text" placeholder=" Name" name="name">
@@ -105,6 +115,7 @@ try {
           <input type="password" placeholder="Repassword" name="repassword">
          <div class="clearfix">
             <button type="submit" class="signupbtn" name="submit">Sign Up</button>
+            <a href="dangnhap.php" class="btn btn-primary btn-lg btn-block" >Sign In</a>
           </div>
         </div>
       </form>

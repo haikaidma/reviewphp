@@ -189,31 +189,31 @@ h4{
 <a href='logout.php' class="btn btn-secondary">logout</a>
 </body>
 </html>	
-<script>
-$(document).ready(function() {
-   
-	$(document).on("click", "#delete", function() { 
-        
-    if(confirm('Bạn chắc chắn muốn xoá')){
-		var $ele = $(this).parent().parent();
-            $.ajax({
-			url: "delete.php",
-			type: "POST",
-			cache: false,
-			data:{
-				id: $(this).attr("data-id")
-			},
-			success: function(dataResult){
-				var dataResult = JSON.parse(dataResult);
-				if(dataResult.statusCode==200){
-                    echo("xoá thành công");
-					$ele.fadeOut().remove();
-				}
-			}
-		});
-    }
-	});
-        
-		
-});
-</script>
+    <script>
+    $(document).ready(function() {
+    
+        $(document).on("click", "#delete", function() { 
+            
+        if(confirm('Bạn chắc chắn muốn xoá')){
+            var $ele = $(this).parent().parent();
+                $.ajax({
+                url: "delete.php",
+                type: "POST",
+                cache: false,
+                data:{
+                    id: $(this).attr("data-id")
+                },
+                success: function(dataResult){
+                    var dataResult = JSON.parse(dataResult);
+                    if(dataResult.statusCode==200){
+                        echo("xoá thành công");
+                        $ele.fadeOut().remove();
+                    }
+                }
+            });
+        }
+        });
+            
+            
+    });
+    </script>

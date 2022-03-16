@@ -18,9 +18,9 @@ $result = mysqli_query($con, $sql);
   $m_time = $row['m_time'];
   if($m_time >= $currentDate){
     if(isset($_POST['submit'])){
-      $token1 = $_POST['token'];
-      $email1 = $_POST['email'];
-      $newpass = md5($_POST['passwordchange']);
+      $token1 = htmlspecialchars($_POST['token']);
+      $email1 = htmlspecialchars($_POST['email']);
+      $newpass = htmlspecialchars(md5($_POST['passwordchange']));
       $query = "UPDATE users SET  password ='$newpass' WHERE email ='$email1' ";
       $result2 = mysqli_query($con,$query);
       if($result2){
