@@ -151,5 +151,4 @@ $("#formdangki").validate({
 });
 });
 
-
 </script>

@@ -54,44 +54,25 @@ $row= mysqli_fetch_assoc($result);
 	<br>
     <br>
 	<input type="submit" name="submit" class="btn btn-primary" value="Submit" class="buttom">
-
 </form>
 </body>
 </html>
 <script type="text/javascript">
-$(document).ready(function () {
-
-//Khi bàn phím được nhấn và thả ra thì sẽ chạy phương thức này
-$("#formupdate").validate({
-  rules: {
-    name: {
-      required: true,
-    },
-	password: {
-      required: true,
-      minlength: 6,
-      maxlength: 15
-    },
-    repassword: {
-        equalTo: "#password",
-        minlength: 6,
-      maxlength: 15
-    },
-  },
-  messages: {
-    name: {
-      required: "Vui lòng nhập vào name",
-    },
-	password: {	
-      required: "Vui lòng nhập mật khẩu!",
-      minlength: "Độ dài tối thiểu 6 kí tự ",
-      maxlength: "Độ tài tối đa 15 kí tự "
-    },
-    repassword: {
-	required: 'Vui lòng nhập mật khẩu<br>',
-	equalTo: 'Mật khẩu không trùng<br>'
-	},
-  }
-});
+$().ready(function() {
+	$("#demoForm").validate({
+		onfocusout: false,
+		onkeyup: false,
+		onclick: false,
+		rules: {
+			"name": {
+				required: true,
+			}
+		},
+		messages: {
+			"name": {
+				required: "Bắt buộc nhập username",
+			}
+		}
+	});
 });
 </script>

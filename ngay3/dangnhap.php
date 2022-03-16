@@ -1,67 +1,52 @@
 <?php
-//Khai báo sử dụng session
-session_start();
-include 'connect.php';
-//remember me
-if(isset($_SESSION['username']))
-{
- header("location:listuser.php");
-}
-// if(isset($_COOKIE["username"]) && isset($_COOKIE["password"]))   
-// 	  {  
-// 	   setcookie ("username","");  
-// 	   setcookie ("password","");  
-// 	  }
-//--------
-if(isset($_POST['submit'])){
-	$username = $_POST['username'];
-    $password = $_POST['password'];
-	$sql = "SELECT email,password FROM users Where email='$username'";
-	$result = mysqli_query($con, $sql);
-	if (mysqli_num_rows($result) == 0) {
-        header("location: dangnhap.php?error=This username does not exist. Please check again!");
-        exit;
-    }
-	$row = mysqli_fetch_array($result);
-	if (password_verify($password, $row['password'])) {
-		$_SESSION["username"] = $username;
-		// header("location: dangnhap.php?error=Incorrect password. Please re-enter!. ");
-        // exit;
-		if(!empty($_POST["remember"]))   
-	 {  
-		 
-	  setcookie ("username",$username,time()+ (10 * 365 * 24 * 60 * 60));  
-	  setcookie ("password",$password,time()+ (10 * 365 * 24 * 60 * 60));
-	   
-	 }
-	
-	//  else
-	//  {  
-	// 	header("location: dangnhap.php?error=Incorrect password. Please re-enter!. ");
-    // }
-	
-}
-// 	if($row)   
-// 	{  
-// 	 if(!empty($_POST["remember"]))   
-// 	 {  
-		 
-// 	  setcookie ("username",$username,time()+ (10 * 365 * 24 * 60 * 60));  
-// 	  setcookie ("password",$password,time()+ (10 * 365 * 24 * 60 * 60));
-// 	  $_SESSION["username"] = $username;
-// 	 }
-// 	 else  
-// 	 {  
-// 	  if(isset($_COOKIE["username"])&&isset($_COOKIE["password"]))   
-// 	  {  
-// 	   setcookie ("username","");
-// 	   setcookie ("password","");  
-// 	  }
-// 	}
-// }
-header('location: listuser.php');	
-	}
 
+include 'connect.php';
+session_start();
+
+$check=1;
+
+$error='';
+$dsusers='';
+$password_cookie='';
+$email_cookie='';
+
+if(isset($_COOKIE['user'])&&isset($_COOKIE['password'])){
+  $email_cookie =  htmlspecialchars($_COOKIE['username']);
+  $password_cookie =  htmlspecialchars($_COOKIE['password']);
+  
+}
+
+if(isset($_POST['submit'])){
+
+    if($check==1){
+      $email   = htmlspecialchars($_POST['username']);
+      $pass   = htmlspecialchars($_POST['password']);
+      $password   = md5($pass);
+
+      $sql = "SELECT * FROM users where email='".$email."' AND password='".$password."'";
+
+
+      $result = $con->query($sql);
+	  if (mysqli_num_rows($result) == 0) {
+        header("location: dangnhap.php?error=User account or password incorrect	. Please check again!");
+        exit;}
+      $data=[];
+
+      if($result->num_rows >0){
+          while($row = $result->fetch_assoc()){
+              $data['users']=$row;
+          }
+		  if(isset($_POST['remember'])&&$_POST['remember']){
+			setcookie('username',$email,time()+(86400*30));
+			setcookie('password',$pass,time()+(86400*30));
+		  }
+		  header("location:listuser.php");
+
+      }else{
+          $error = 'error';
+      }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
