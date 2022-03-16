@@ -1,19 +1,4 @@
-
-<!DOCTYPE html>
-<html lang="en">  
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style2.css">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script type="text/javascript" src="js/jquery.validate.min.js"></script>
-
-</head>
-
-<body>
-    <form action="dangki.php"  method="post" id="formDemo">
-    <?php
+<?php
 include('connect.php');
 require "PHPMailer-master/src/PHPMailer.php";  //nhúng thư viện vào để dùng, sửa lại đường dẫn cho đúng nếu bạn lưu vào chỗ khác
 require "PHPMailer-master/src/SMTP.php"; //nhúng thư viện vào để dùng
@@ -41,41 +26,16 @@ if(isset($_POST['submit'])){
     header("location: dangki.php?error=This email already has a user. Please choose another Email.");
     exit;
   }
-  if(!$uppercase || !$lowercase || !$number || strlen($password) < 8) {
-    header("location: dangki.php?error=Password type can fit numbers, strings, uppercase letters, special characters.");
-    exit;
-  }
-  if($password!=$repassword){
+  // if(!$uppercase || !$lowercase || !$number || strlen($password) < 15) {
+  //   header("location: dangki.php?error=Password type can fit numbers, strings, uppercase letters, special characters.");
+  //   exit;
+  // }
+  if($password != $repassword){
     header("location: dangki.php?error=Passwords do not match .");
     exit;
   }
   $password  = md5($_POST['password']);
   //gmail
-
-//Khởi tạo đối tượng PHPMailer
-$PHPMailer = new PHPMailer(true);
-
-//Khai báo cấu hình và gửi mail
-try {
-    $PHPMailer->SMTPDebug = 0;
-    $PHPMailer->isSMTP();
-    $PHPMailer->Host = 'smtp.gmail.com';
-    $PHPMailer->SMTPAuth = true;
-    $PHPMailer->Username = 'nguyenvanhai140320@gmail.com';
-    $PHPMailer->Password = '01652652535';
-    $PHPMailer->SMTPSecure = 'ssl';
-    $PHPMailer->Port = 465;
-   
-    $PHPMailer->setFrom('nguyenvanhai140320@gmail.com', 'Haikadima');
-    $PHPMailer->addAddress($username ,$name);
-   
-    $PHPMailer->isHTML(true);
-    $PHPMailer->Subject = 'Here is the subject';
-    $PHPMailer->Body = 'Đăng ký thành công';
-    $PHPMailer->send();
-} catch (Exception $exception) {
-    echo $PHPMailer->ErrorInfo;
-}
   $sql = "INSERT INTO users (name,password,email) VALUES('$name','$password','$username')";
 
   $result = mysqli_query($con, $sql);
@@ -84,8 +44,47 @@ try {
   else
   echo"Register fail  <a href='dangki.php'>Try again</a>";
   
+
+//Khởi tạo đối tượng PHPMailer
+$PHPMailer = new PHPMailer(true);
+
+//Khai báo cấu hình và gửi mail
+try {
+  $PHPMailer->SMTPDebug = 0;
+  $PHPMailer->isSMTP();
+  $PHPMailer->Host = 'smtp.gmail.com';
+  $PHPMailer->SMTPAuth = true;
+  $PHPMailer->Username = 'nguyenvanhai140320@gmail.com';
+  $PHPMailer->Password = '01652652535';
+  $PHPMailer->SMTPSecure = 'ssl';
+  $PHPMailer->Port = 465;
+
+  $PHPMailer->setFrom('nguyenvanhai140320@gmail.com', 'Haikadima');
+  $PHPMailer->addAddress($username);
+
+  $PHPMailer->isHTML(true);
+  $PHPMailer->Subject = 'ĐĂng kí tài khoản';
+  $PHPMailer->Body = "Bạn đã đăng ký thành công";
+  $PHPMailer->send();
+} catch (Exception $exception) {
+  echo $PHPMailer->ErrorInfo;
+}
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">  
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style2.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+
+</head>
+
+<body>
+    <form action="dangki.php"  method="post" id="formdangki">
         <div class="container">
           <h1>Form Register</h1>
           <hr>
@@ -94,15 +93,16 @@ try {
 				?> <p class="error" style="color:red;"><?php echo $_GET['error'];?></p>	
 				<?php }
 				?>
+        <span id="password_error"></span>
           <hr>
           <label for="email"><b>Name</b></label>
-          <input type="text" placeholder=" Name" name="name"  >
+          <input type="text" placeholder=" Name" name="name">
          <label for="email"><b>Email</b></label>  
-          <input type="text" placeholder=" Email" name="email" >
-         <label for="psw"><b>Password</b></label>
-          <input type="password" placeholder="Password" name="password"  >
+          <input type="text" placeholder=" Email" name="email">
+         <label for="password"><b>Password</b></label>
+          <input type="password" placeholder="Password" name="password" id="password">
           <label for="psw"><b>Repassword</b></label>
-          <input type="password" placeholder="Repassword"   name="repassword"  >
+          <input type="password" placeholder="Repassword" name="repassword">
          <div class="clearfix">
             <button type="submit" class="signupbtn" name="submit">Sign Up</button>
           </div>
@@ -115,7 +115,7 @@ try {
 $(document).ready(function () {
 
 //Khi bàn phím được nhấn và thả ra thì sẽ chạy phương thức này
-$("#formDemo").validate({
+$("#formdangki").validate({
   rules: {
     name: "required",
     email: {
@@ -128,8 +128,7 @@ $("#formDemo").validate({
       maxlength: 15
     },
     repassword: {
-        equalTo: "#password",
-        minlength: 6,
+      minlength: 6,
       maxlength: 15
     },
   },
@@ -145,10 +144,12 @@ $("#formDemo").validate({
       maxlength: "Độ tài tối đa 15 kí tự<br>"
     },
     repassword: {
-							required: 'Vui lòng nhập mật khẩu<br>',
-							equalTo: 'Mật khẩu không trùng<br>'
-						},
+			required: "Vui lòng nhập mật khẩu<br>",
+		
+		},
   }
 });
 });
+
+
 </script>

@@ -7,7 +7,7 @@ $result = mysqli_query($con,"SELECT * FROM users");
 <head>
 </head>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <style>
 table {
   font-family: arial, sans-serif;
@@ -132,9 +132,9 @@ h4{
 		?>
 	<table>
 	<tr>
+        <td>ID</td>
 		<td>Name</td>
 		<td>Email</td>
-		<td>Password</td>
 		<td>Action</td>
 	</tr>
 	<?php
@@ -142,13 +142,16 @@ h4{
 	while($row=mysqli_fetch_assoc($result)) {
 	?>
 	<tr>
+        <td><?php echo $row["ID"]; ?></td>
 		<td><?php echo $row["name"]; ?></td>
-		<td><?php echo $row["email"]; ?></td>
-		<td><?php echo $row["password"]; ?></td>
-		<td><a href="delete.php?ID=<?php echo $row["ID"]; ?>" class= "btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+		<td><?php echo $row["email"]; ?></td>   
+		<td><a href="delete.php?ID=<?php echo $row["ID"]; ?>" class= "btn btn-danger" id="delete">Delete</a>
 		<a href=" update.php?ID=<?php echo $row["ID"]; ?> " class="btn btn-success">Update</a>
 	</td>
 	</tr>
+    <tbody id="table">
+      
+    </tbody>
 	<?php
 	$i++;
 	}
@@ -186,3 +189,31 @@ h4{
 <a href='logout.php' class="btn btn-secondary">logout</a>
 </body>
 </html>	
+<script>
+$(document).ready(function() {
+   
+	$(document).on("click", "#delete", function() { 
+   
+    if(confirm('Bạn chắc chắn muốn xoá')){
+		var $ele = $(this).parent().parent();
+            $.ajax({
+			url: "delete.php",
+			type: "POST",
+			cache: false,
+			data:{
+				id: $(this).attr("data-id")
+			},
+			success: function(dataResult){
+				var dataResult = JSON.parse(dataResult);
+				if(dataResult.statusCode==200){
+                    echo("xoá thành công");
+					$ele.fadeOut().remove();
+				}
+			}
+		});
+    }
+	});
+        
+		
+});
+</script>

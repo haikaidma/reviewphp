@@ -1,68 +1,13 @@
 <?php
-//Khai báo sử dụng session
-session_start();
-include 'connect.php';
-//remember me
-if(isset($_SESSION['username']))
-{
- header("location:listuser.php");
-}
-// if(isset($_COOKIE["username"]) && isset($_COOKIE["password"]))   
-// 	  {  
-// 	   setcookie ("username","");  
-// 	   setcookie ("password","");  
-// 	  }
-//--------
-if(isset($_POST['submit'])){
-	$username = $_POST['username'];
-    $password = $_POST['password'];
-	$sql = "SELECT email,password FROM users Where email='$username'";
-	$result = mysqli_query($con, $sql);
-	if (mysqli_num_rows($result) == 0) {
-        header("location: dangnhap.php?error=This username does not exist. Please check again!");
-        exit;
+    session_start();
+    ob_start();
+    include 'connect.php';
+    if(isset($_COOKIE['username']) && isset($_COOKIE['password'])){
+        $ck_email = $_COOKIE['username'];
+        $ck_password = $_COOKIE['password'];
     }
-	$row = mysqli_fetch_array($result);
-	if (password_verify($password, $row['password'])) {
-		$_SESSION["username"] = $username;
-		// header("location: dangnhap.php?error=Incorrect password. Please re-enter!. ");
-        // exit;
-		if(!empty($_POST["remember"]))   
-	 {  
-		 
-	  setcookie ("username",$username,time()+ (10 * 365 * 24 * 60 * 60));  
-	  setcookie ("password",$password,time()+ (10 * 365 * 24 * 60 * 60));
-	   
-	 }
-	
-	//  else
-	//  {  
-	// 	header("location: dangnhap.php?error=Incorrect password. Please re-enter!. ");
-    // }
-	
-}
-// 	if($row)   
-// 	{  
-// 	 if(!empty($_POST["remember"]))   
-// 	 {  
-		 
-// 	  setcookie ("username",$username,time()+ (10 * 365 * 24 * 60 * 60));  
-// 	  setcookie ("password",$password,time()+ (10 * 365 * 24 * 60 * 60));
-// 	  $_SESSION["username"] = $username;
-// 	 }
-// 	 else  
-// 	 {  
-// 	  if(isset($_COOKIE["username"])&&isset($_COOKIE["password"]))   
-// 	  {  
-// 	   setcookie ("username","");
-// 	   setcookie ("password","");  
-// 	  }
-// 	}
-// }
-header('location: listuser.php');	
-	}
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>	
@@ -88,22 +33,54 @@ header('location: listuser.php');
 				<h2>ADMIN</h2>
 			</div>
 			<form action="" method="post" id= "myForm" >
+            <?php 
+            if(isset($_POST['submit'])){
+                $username = $_POST['username'];
+                $password = $_POST['password'];
+                $sql = "SELECT email,password FROM users Where email='$username'";
+                $result = mysqli_query($con, $sql);
+var_dump($sql);
+exit;
+                // if (mysqli_num_rows($result) == 0) {
+                //     header("location: dangnhap.php?error=This username does not exist. Please check again!");
+                //     exit;
+                // }    
+                            if(mysqli_num_rows($result) > 0){
+                                while($row = mysqli_fetch_array($result)){
+                                    if(password_verify($password, $row['password'])){
+                                      echo $password;
+                                        $_SESSION['username'] = $username;
+                                        if(isset($_POST['remember']) && ($_POST['remember'])){
+                                            setcookie('username', $username, time() + (86400*30));
+                                            setcookie('password', $password, time() + (86400*30));
+                                        }
+                                        header('location: listuser.php');
+                                    }else{
+                                        echo '<strong style="color:red">Email hoặc password nhập sai</strong>';
+                                    }
+                                }
+                            }else{
+                                echo '<strong style="color:red">Tài khoản không tồn tại, vui lòng đăng ký để tiếp tục đăng nhập</strong>';
+                            }
+                            
+                        }
+                    ?>
 				<?php
 				if(isset($_GET['error'])){
 				?> <p class="error" style="color:red;"><?php echo $_GET['error'];?></p>	
 				<?php }
 				?>
 				<div class="user-name">
-					<input placeholder="Username" name="username" class="user" type="email" value="<?php if(isset($_COOKIE["username"])) { echo $_COOKIE["username"]; } ?>"  >
+					<input placeholder="Username" name="username" class="user" type="email" value="<?php if(isset($ck_email)) echo $ck_email;?>"  >
 				</div>
 				<br>
 				<div class="pass-word">
-					<input  placeholder="Password" name="password" class="pass" type="password"  value="<?php if(isset($_COOKIE["password"])) { echo $_COOKIE["password"]; } ?>" >
+					<input  placeholder="Password" name="password" class="pass" type="password"  value="<?php if(isset($ck_password)) echo $ck_password;?>" >
 				</div>
 				<br>
 				<div class="remember-me">
 					<label for="remember-me" style="color:white;">Remember me</label>
-					<input name="remember"  type="checkbox" <?php if(isset($_COOKIE["username"])) { ?> checked <?php } ?>>
+					<input name="remember"  type="checkbox">
 				</div>
 				<br>
 					<a class="reg" href="dangki.php" >Do not have an account?</a>

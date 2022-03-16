@@ -1,31 +1,37 @@
+
 <?php
 include 'connect.php';
 if(isset($_GET['token'])&&isset($_GET['token']))
 {
-  $key = $_GET['token'];
-  $email=$_GET['email'];
-    $sql = "SELECT * FROM resetpass Where m_email='$email'";
-	$result = mysqli_query($con, $sql);
-	if (mysqli_num_rows($result) == 0) {
-        header("location: doimk.php?error=Lỗi.");
-        exit;  
-    }
-  else{
+  $token = $_GET['token'];
+}
+$currentDate = date('U');
+
+$sql = "SELECT * FROM resetpass Where m_token='$token'";
+$result = mysqli_query($con, $sql);
+// if (mysqli_num_rows($result) == 0) {
+//       header("location: doimk.php?error=Lỗi.");
+//       exit;   
+//   }
+  $row = mysqli_fetch_array($result);
+  $email = $row['m_email'];
+  $m_time = $row['m_time'];
+  if($m_time >= $currentDate){
     if(isset($_POST['submit'])){
-      $email=$_POST['email'];
-      var_dump($email);
-      exit;
-        $newpass = md5($_POST["passwordchange"]);
-        $renewpass = md5($_POST["repasswordchange"]); 
-      if($newpass==$renewpass){   
-        $query = "UPDATE users SET  password='" . $newpass . "' WHERE email='" . $email . "'";
-    $result2 = mysqli_query($con,$query);
-    echo "Đổi thành công.";
-    }
+      $token1 = $_POST['token'];
+      $email1 = $_POST['email'];
+      $newpass = md5($_POST['passwordchange']);
+      $query = "UPDATE users SET  password ='$newpass' WHERE email ='$email1' ";
+      $result2 = mysqli_query($con,$query);
+      if($result2){
+        header("location: doimk.php?token={$token}&success=Đổi mật khẩu thành công");
+      }
+      else{
+        echo "lỗi";
+      }
     }
   }
-}
-?>
+?> 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,8 +48,15 @@ if(isset($_GET['token'])&&isset($_GET['token']))
         }
 </style>
 <body>
-<form action="doimk.php" method="post" style="width:600px;" class="border border-primary border-2 m-auto p-2" id="formreset">
-    <h4 style="text-align: center;">Đổi mật khẩu</h4>
+<form action="" method="post" style="width:600px;" class="border border-primary border-2 m-auto p-2" id="formreset">   
+<h4 style="text-align: center;">Đổi mật khẩu</h4>
+<?php
+				if(isset($_GET['success'])){
+				?> <p class="success" style="color:green;"><?php echo $_GET['success'];?></p>	
+				<?php }
+				?>
+    <input type="hidden" name="token" value="<?php echo $token; ?>">
+    <input type="hidden" name="email" value="<?php echo $email; ?>">
     <div class="form-group">
     <label for="password">Nhập Mật khẩu</label>
     <input type="password" class="form-control" id="password" name="passwordchange" placeholder="Enter password">
@@ -51,6 +64,9 @@ if(isset($_GET['token'])&&isset($_GET['token']))
     <input type="password" class="form-control" id="repassword" name="repasswordchange" placeholder="Enter Repassword">
   </div>
     <button type="submit" name="submit" class="btn btn-primary">Gửi yêu cầu</button>
+    <br>
+    <br>
+    <a href=" dangnhap.php?"class="btn btn-success" >Đăng nhập</a>
     </form>
 </body>
 </html>
@@ -60,24 +76,24 @@ $(document).ready(function () {
 //Khi bàn phím được nhấn và thả ra thì sẽ chạy phương thức này
 $("#formreset").validate({
   rules: {
-    password: {
+    passwordchange: {
       required: true,
       minlength: 6,
       maxlength: 15
     },
-    repassword: {
+    repasswordchange: {
         equalTo: "#password",
         minlength: 6,
       maxlength: 15
     },
   },
   messages: {
-    password: {
+    passwordchange: {
       required: "Vui lòng nhập mật khẩu!",
       minlength: "Độ dài tối thiểu 6 kí tự ",
       maxlength: "Độ tài tối đa 15 kí tự "
     },
-    repassword: {
+    repasswordchange: {
 	required: 'Vui lòng nhập mật khẩu<br>',
 	equalTo: 'Mật khẩu không trùng<br>'
 						},

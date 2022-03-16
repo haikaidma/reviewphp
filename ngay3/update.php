@@ -41,10 +41,13 @@ $row= mysqli_fetch_assoc($result);
 	<input type="text" name="name"  value="<?php echo $row['name']; ?>">
 	<br>
 	Email :<br>
-	<input type="email" name="email"   value="<?php echo $row['email']; ?>">
+	<input type="email" name="email" readonly  value="<?php echo $row['email']; ?>">
 	<br>
 	Password:<br>
-	<input type="text" name="password"   value="<?php echo $row['password']; ?>">
+	<input type="password" name="password"   value="<?php echo $row['password']; ?>">
+	<br>
+	Repassword:<br>
+	<input type="password" name="repassword"   value="<?php echo $row['password']; ?>">
 	<br>
     <br>
 	<input type="submit" name="submit" class="btn btn-primary" value="Submit" class="buttom">

@@ -7,8 +7,8 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 if(isset($_POST['submit'])==TRUE)
 {
-    $email = $_POST['email'];
-    $sql = "SELECT email,password FROM users Where email='$email'";
+  $email = $_POST['email'];
+    $sql = "SELECT * FROM users Where email='$email'";
 	$result = mysqli_query($con, $sql);
 	if (mysqli_num_rows($result) == 0) {
         header("location: resetpass.php?error=Email này chưa được đăng ký.");
@@ -16,12 +16,12 @@ if(isset($_POST['submit'])==TRUE)
     }
     else
     {
-         $mkmoi=substr(md5(rand(0,999999)),0,8);
-         $time=time();
+        //  $mkmoi=substr(md5(rand(0,999999)),0,12);
+        $token = bin2hex(random_bytes(12));
+        $time=date('U') + 86400;
         $sql2="INSERT INTO resetpass (m_email, m_time,m_token)
-        VALUES ('$email',  $time, '$mkmoi');";
+        VALUES ('$email',  $time, '$token');";
         $kq= mysqli_query($con, $sql2);
-
         if($kq==true)
         header("location: resetpass.php?success= Chúng tôi đã gửi thông tin đặt lại mật khẩu vào email của bạn, vui lòng kiểm tra email và làm theo hướng dẫn");
             $PHPMailer = new PHPMailer(true);
@@ -42,7 +42,7 @@ if(isset($_POST['submit'])==TRUE)
     
         $PHPMailer->isHTML(true);
         $PHPMailer->Subject = 'Reset Password';
-        $PHPMailer->Body = "Nhấn vào để đổi mk. https://nineplus-intern.herokuapp.com/ngay3/doimk.php?token={$mkmoi}&email={$email}";
+        $PHPMailer->Body = "Nhấn vào để đổi mk. http://localhost:8080/reviewPhp/ngay3/doimk.php?token={$token}";
         $PHPMailer->send();
     } catch (Exception $exception) {
         echo $PHPMailer->ErrorInfo;
