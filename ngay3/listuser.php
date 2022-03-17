@@ -44,55 +44,6 @@ h4{
                 <input type="submit" name="submit" value="search" />
             </form>
 			<?php
-        include 'connect.php';
-        if (isset($_REQUEST['submit'])) 
-        {
-            // Gán hàm addslashes để chống sql injection
-            $search = addslashes(htmlspecialchars(mysqli_real_escape_string($con,$_GET['search'])));
-            // Nếu $search rỗng thì báo lỗi, tức là người dùng chưa nhập liệu mà đã nhấn submit.
-            if (empty($search)) {
-                echo "Please enter text";
-            } 
-            else
-            {
-                // Dùng câu lênh like trong sql và sứ dụng toán tử % của php để tìm kiếm dữ liệu chính xác hơn.
-                
-                $query = "select name,email from users where name like '%$search%' Or email like '%$search%'";
- 
- 
-                // Thực thi câu truy vấn
-                $sql = mysqli_query($con,$query);
- 
-                // Đếm số đong trả về trong sql.
-                $num = mysqli_num_rows($sql);
- 
-                // Nếu có kết quả thì hiển thị, ngược lại thì thông báo không tìm thấy kết quả
-                if ($num > 0 && $search != "") 
-                {
-                    // Dùng $num để đếm số dòng trả về.
-                    echo "$num results returned with the keyword <b>$search</b>";
- 
-                    // Vòng lặp while & mysql_fetch_assoc dùng để lấy toàn bộ dữ liệu có trong table và trả về dữ liệu ở dạng array.
-                    echo '<table border="1" cellspacing="0" cellpadding="10">';
-                    echo '<tr>';
-                    echo "<td>Name</td>";
-                    echo "<td>Email</td>";
-                 
-                echo '</tr>';
-                    while ($row = mysqli_fetch_assoc($sql)) {
-                        echo '<tr>';
-                            echo "<td>{$row['name']}</td>";
-                            echo "<td>{$row['email']}</td>";
-                         
-                        echo '</tr>';
-                    }
-                    echo '</table>';
-                } 
-                else {
-                    echo "Can't find results";
-                }
-            }
-        }
         ?>   
 </div>
 <br>
@@ -135,6 +86,24 @@ h4{
         // BƯỚC 5: TRUY VẤN LẤY DANH SÁCH TIN TỨC
         // Có limit và start rồi thì truy vấn CSDL lấy danh sách tin tức
         $result = mysqli_query($con, "SELECT * FROM users LIMIT $start, $limit");
+        if(isset($_REQUEST['submit'])){
+            $search = addslashes(htmlspecialchars(mysqli_real_escape_string($con,$_GET['search'])));
+            if(isset($_GET['search']))
+            {
+                if (empty($search)) {
+                            echo "Please enter text";
+                        } 
+                else{
+                    $query = "select ID,name,email from users where name like '%$search%' Or email like '%$search%'";
+                    $result = mysqli_query($con,$query);
+                    
+                }
+                
+            }
+        }
+
+
+        
 		// PHẦN HIỂN THỊ TIN TỨC
 // BƯỚC 6: HIỂN THỊ DANH SÁCH TIN TỨC
 		?>
@@ -147,12 +116,17 @@ h4{
 	</tr>
 	<?php
 	$i=0;
+    if($result)
+    {
 	while($row=mysqli_fetch_assoc($result)) {
+        $id = $row['ID'];
+        $name = $row['name'];
+        $email = $row['email'];
 	?>
 	<tr>
-        <td><?php echo $row["ID"]; ?></td>
-		<td><?php echo $row["name"]; ?></td>
-		<td><?php echo $row["email"]; ?></td>   
+        <td><?php echo $id ?></td>
+		<td><?php echo $name ?></td>
+		<td><?php echo $email ?></td>   
 		<td class="td_delete"><a  class= "btn btn-danger" id="delete">Delete</a>
 		<a href=" update.php?ID=<?php echo $row["ID"]; ?> " class="btn btn-success">Update</a>
 	</td>
@@ -163,6 +137,8 @@ h4{
 	<?php
 	$i++;
 	}
+}
+
 	?>
 </table>
  <div class="pagination">
