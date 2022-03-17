@@ -7,7 +7,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 // require_once ("PHPMailer");
 if(isset($_POST['submit'])){
-  $name = htmlspecialchars($_POST['name']);
+  $name = htmlspecialchars(mysqli_real_escape_string($con,$_POST['name']));
   $username = htmlspecialchars($_POST['email']);
   $password  = htmlspecialchars($_POST['password']);
   $repassword  = htmlspecialchars($_POST['repassword']);

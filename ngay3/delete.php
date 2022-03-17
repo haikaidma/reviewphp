@@ -1,21 +1,19 @@
 <?php 
-include_once 'connect.php';
-$id=$_POST['id'];
-$sql = "DELETE FROM users WHERE ID=$id";
-if (mysqli_query($con, $sql)) {
 
-  header("location: listuser.php?alert=Data Deleted Successfully");
-} 
-else {
-    echo json_encode(array("statusCode"=>201));
+include('connect.php');
+
+$error='';
+
+if(isset($_POST['id_user'])){
+    $id_user = $_POST['id_user'];
+
+    $sql = "DELETE FROM users WHERE ID='".$id_user."'";
+    if(mysqli_query($con, $sql)){
+        echo 'delete user id='.$id_user.'success';
+    }else{
+        echo 'fail';
+    }
+    
 }
-mysqli_close($con);
-// if($result = mysqli_query($con, $query)){
-//     
-// }
-// else{
-//     // echo "Error.";
-//     header("location: listuser.php?alert=ERROR");
-// }
-
+?>
 ?>

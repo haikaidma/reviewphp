@@ -1,22 +1,23 @@
 <?php 
 include_once 'connect.php';
 if(count($_POST)>0) {
-	
-	$query = "UPDATE users SET name='" . htmlspecialchars($_POST['name']) . "' WHERE ID='" . $_GET['ID'] . "'";
+	$name=htmlspecialchars(mysqli_real_escape_string($con,$_POST['name']));
+	$query = "UPDATE users SET name='" . $name. "' WHERE ID='" . $_GET['ID'] . "'";
 	if($result = mysqli_query($con,$query)){
 		echo "Record Updated Successfully.";
 	}
 	else{
-		echo "Error.";
+		echo "Error 500.";
 	}
 	
 }
 $id = isset($_GET['ID']) ? $_GET['ID'] : false;
 $id = str_replace('/[^0-9]/', '', $id);
-$result = mysqli_query($con,"SELECT * FROM users WHERE id = '".htmlspecialchars($id)	."' limit 1");
-if ($result) {
-	$row= mysqli_fetch_assoc($result);
-}
+	$result = mysqli_query($con,"SELECT * FROM users WHERE id = '".htmlspecialchars($id)	."' limit 1");
+	if ($result) {
+		$row= mysqli_fetch_assoc($result);	
+	}
+
 ?>
 <html>
 <head>
@@ -44,10 +45,10 @@ if ($result) {
 </div>
 	
 	 Name: <br>
-	<input type="text" name="name"  value="<?php echo $row['name']; ?>">
+	<input type="text" name="name"  value="<?php echo ($row['name']); ?>">
 	<br>
 	Email :<br>
-	<input type="email" name="email" readonly  value="<?php echo $row['email']; ?>">
+	<input type="email" name="email" readonly  value="<?php echo ($row['email']); ?>">
     <br>
 	<br>
 	<input type="submit" name="submit" class="btn btn-primary" value="Submit" class="buttom">
