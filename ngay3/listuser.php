@@ -9,9 +9,7 @@ $result = mysqli_query($con,"SELECT * FROM users");
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
 table {
   font-family: arial, sans-serif;
@@ -101,11 +99,6 @@ h4{
                 
             }
         }
-
-
-        
-		// PHẦN HIỂN THỊ TIN TỨC
-// BƯỚC 6: HIỂN THỊ DANH SÁCH TIN TỨC
 		?>
 	<table>
 	<tr>
@@ -127,9 +120,11 @@ h4{
         <td><?php echo $id ?></td>
 		<td><?php echo $name ?></td>
 		<td><?php echo $email ?></td>   
-		<td class="td_delete"><a  class= "btn btn-danger" id="delete">Delete</a>
-		<a href=" update.php?ID=<?php echo $row["ID"]; ?> " class="btn btn-success">Update</a>
-	</td>
+		<td class="td_delete">
+            <a class= "btn btn-danger" data-id=<?php echo $id; ?> id="delete" >Delete</a>
+		
+            <a href=" update.php?ID=<?php echo $row["ID"]; ?> " class="btn btn-success">Update</a>
+	    </td>
 	</tr>
     <tbody id="table">
       
@@ -174,32 +169,28 @@ h4{
 </body>
 </html>	
 <script>
-    $(document).ready(function(){
-        
-        $('#delete').click(function(){
-            var id = $(this).attr('ID');
-            var confi = confirm('bạn có chắc muốn xóa user?');
-            if(confi){
-                $.ajax({
-                method: "POST",
-                url: 'delete.php',
-                data:{
-                    id_user: id,                               
-                },
-                success:function(data){
-                    alert(data);
-
-                }    
-
-                });
-            
-                $(this).closest('td.td_delete').closest('tr').remove();
-            }
-            
-
-        });
-
-
-    })
-
+$(document).ready(function() {
+	$(document).on("click", "#delete", function() { 
+		var $ele = $(this).parent().parent();
+        var id= $(this).attr("data-id");
+        if(confirm("Bạn chắc chắn muốn xoá ?")){
+            $.ajax({
+			url: "delete.php",
+			type: "POST",
+			cache: false,
+			data:{
+				id: id
+			},
+			success: function(dataResult){
+                console.log(dataResult);
+				var dataResult = JSON.parse(dataResult);
+				if(dataResult.statusCode==200){
+					$ele.fadeOut().remove();
+				}
+			}
+		});
+        }
+	
+	});
+});
 </script>

@@ -96,7 +96,7 @@ try {
           <hr>
           <?php
 				if(isset($_GET['error'])){
-				?> <p class="error" style="color:red;background:red;"><?php echo $_GET['error'];?></p>	
+				?> <p class="error" style="color:red;"><?php echo $_GET['error'];?></p>	
 				<?php }
 				?>
         <?php
